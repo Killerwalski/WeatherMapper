@@ -1,12 +1,13 @@
 ﻿@page "/"
 @page "/map"
-
+@using WeatherMapper.Web.Data
+@inject IWeatherService WeatherService
 
 <h3>Click a Point on Map to Display Weather Details</h3>
 
 <div class="row">
     <div class="col-xl-6">
-        <RadzenGoogleMap style="height: 400px" Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 38.581721, Lng = -75.9030 }) MapClick=@OnMapClick MarkerClick=@OnMarkerClick>
+        <RadzenGoogleMap style="height: 400px" Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 38.5817, Lng = -75.9030 }) MapClick=@OnMapClick MarkerClick=@OnMarkerClick>
             <Markers>
                 <RadzenGoogleMapMarker Title="@MapMarkerTitle" Label="@MapMarkerTitle" Position="@Position" />
             </Markers>
@@ -24,7 +25,7 @@
     string MapMarkerTitle;
     GoogleMapPosition Position;
 
-    void OnMapClick(GoogleMapClickEventArgs args)
+    async Task OnMapClick(GoogleMapClickEventArgs args)
     {
         console.Log($"Map clicked at Lat: {args.Position.Lat}, Lng: {args.Position.Lng}");
 
@@ -35,12 +36,15 @@
         
 
         // Get Weather
-
+        var weather = await WeatherService.GetWeatherItemAsync(args.Position.Lat, args.Position.Lng);
+        console.Log("Temp: " + weather.Main.Temp + "°C / " + ConvertCelsiusToFarenheit(weather.Main.Temp) + "°F");
+        console.Log("Forecast: " + weather.Weather.FirstOrDefault().Description);
     }
 
     void OnMarkerClick(RadzenGoogleMapMarker marker)
     {
         console.Log($"Map {marker.Title} marker clicked. Marker position -> Lat: {marker.Position.Lat}, Lng: {marker.Position.Lng}");
-
     }
+
+    public double ConvertCelsiusToFarenheit(double celsius) => celsius * 1.8 + 32;
 }

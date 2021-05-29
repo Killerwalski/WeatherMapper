@@ -7,5 +7,6 @@ namespace WeatherMapper.Web.Data
 {
     public interface IWeatherService
     {
+        public Task<WeatherItem> GetWeatherItemAsync(double lat, double lng);
     }
 }

@@ -1,44 +1,11 @@
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace WeatherMapper.Tests
+namespace WeatherMapper.Web.Data
 {
-    public class WeatherTests
-    {
-        ITestOutputHelper Output;
-        IConfiguration Configuration;
-
-        public WeatherTests(ITestOutputHelper output)
-        {
-            Output = output;
-            Configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.Development.json", false, true)
-                .Build();
-        }
-
-        [Fact]
-        public async Task WeatherApi_Returns_Weather_Result()
-        {
-            var apiKey = Configuration["OpenWeatherApiKey"];
-            var lat = 38.5817;
-            var lon = -75.9030;
-            var httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri($"https://api.openweathermap.org/data/2.5/weather?units=metric&lat={lat}&lon={lon}&appid={apiKey}")
-            };
-            // var result = await httpClient.GetAsync("");
-            var result = await httpClient.GetFromJsonAsync<WeatherItem>("");
-            Output.WriteLine(result.Main.Temp.ToString());
-        }
-    }
-
     public class Coord
     {
         [JsonPropertyName("lon")]
