@@ -1,0 +1,46 @@
+﻿@page "/"
+@page "/map"
+
+
+<h3>Click a Point on Map to Display Weather Details</h3>
+
+<div class="row">
+    <div class="col-xl-6">
+        <RadzenGoogleMap style="height: 400px" Zoom=@zoom Center=@(new GoogleMapPosition() { Lat = 38.581721, Lng = -75.9030 }) MapClick=@OnMapClick MarkerClick=@OnMarkerClick>
+            <Markers>
+                <RadzenGoogleMapMarker Title="@MapMarkerTitle" Label="@MapMarkerTitle" Position="@Position" />
+            </Markers>
+        </RadzenGoogleMap>
+    </div>
+    <div class="col-xl-6">
+        <EventConsole @ref=@console />
+    </div>
+</div>
+
+@code {
+    int zoom = 5;
+    EventConsole console;
+    int Clicks;
+    string MapMarkerTitle;
+    GoogleMapPosition Position;
+
+    void OnMapClick(GoogleMapClickEventArgs args)
+    {
+        console.Log($"Map clicked at Lat: {args.Position.Lat}, Lng: {args.Position.Lng}");
+
+        // Put Marker down
+        Clicks++;
+        MapMarkerTitle = "Place# " + Clicks.ToString();
+        Position = new GoogleMapPosition() { Lat = args.Position.Lat, Lng = args.Position.Lng };
+        
+
+        // Get Weather
+
+    }
+
+    void OnMarkerClick(RadzenGoogleMapMarker marker)
+    {
+        console.Log($"Map {marker.Title} marker clicked. Marker position -> Lat: {marker.Position.Lat}, Lng: {marker.Position.Lng}");
+
+    }
+}
